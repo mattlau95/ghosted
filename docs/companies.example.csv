@@ -1,0 +1,6 @@
+company,tier,why,manual,manual_note,known_ats,known_token
+Example Ashby Co,Yes,Product I actually use,false,,ashby,exampleco
+Example Lever Co,OK,Design systems team,false,,lever,ExampleLever
+Example Greenhouse Co,OK,Strong a11y culture,false,,,
+Enterprise Co,Yes,Have a connection here,true,Workday - check by hand,,
+Not Interested Co,Prefer Not,Industry I do not want,false,,,

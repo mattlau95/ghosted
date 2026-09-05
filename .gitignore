@@ -1,0 +1,6 @@
+﻿.env
+*.exe
+/bin/
+unresolved.csv
+companies.csv
+companies.resolved.csv
