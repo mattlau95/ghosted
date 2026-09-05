@@ -345,3 +345,23 @@ Hit an environment snag along the way: `go run ./cmd/resolver` failed with `An A
 ### Next Session
 * Read the 58 scored postings for real (SCORING.md: "read a week of output before automating delivery") and start collecting the 2-3 hand-scored calibration examples once there's a week of real output to draw from.
 * Move to Stage 4: schedule `fetcher` then `scorer` to run daily via Windows Task Scheduler, and build the nightly email digest (empty day sends nothing).
+
+---
+
+## [2026-09-04] - Initial commit pushed; docs/SETUP.md written
+**Session Goal:** Get everything committed and pushed to GitHub so the project can be pulled and run from a second computer.
+**Status:** Completed
+
+### The "Why" (Decision Log)
+* **Resolution:** First commit ever made to this repo (`origin` was already configured pointing at an empty `github.com/mattlau95/ghosted`, but nothing had been pushed). Reviewed the full file list before staging — confirmed `.env`, `docs/companies.csv`, `docs/companies.resolved.csv`, `unresolved.csv`, and `bin/*.exe` were all correctly excluded by `.gitignore` before running `git add`.
+* **Resolution:** Ran `go mod tidy` before committing — `anthropic-sdk-go` was still listed as an indirect dependency in `go.mod` even though `internal/scorer` and `cmd/scorer` both import it directly (an artifact of adding it via `go get` before writing the code that uses it). Fixed so `go.mod` accurately reflects direct vs. transitive dependencies for whoever clones this next.
+* **Resolution:** Caught and fixed a mistake in the same session it happened: while writing `docs/SETUP.md`, initially pasted the real `DATABASE_URL` (with password) and `ANTHROPIC_API_KEY` directly into the file — exactly the kind of tracked-secret exposure the whole `.gitignore`/`.env` split exists to prevent. Caught it before committing and rewrote that section to explain *how* to get the values (copy from the working `.env`, or regenerate a key) without embedding them. Also corrected a reference to a `.env` copy on OneDrive that was never actually made (that copy attempt was blocked by a permission classifier and the user is doing it manually later) — the doc shouldn't claim a backup exists that doesn't.
+* **Resolution:** Copied `docs/companies.csv` to the user's OneDrive-synced folder (`Documents\ghosted\companies.csv`) at their request, for pulling onto a second machine — this file is gitignored by design (personal data), so it doesn't travel with `git clone`. The `.env` copy to the same location was blocked by the harness's permission classifier (copying live credentials into a cloud-sync folder); left that step for the user to do by hand rather than finding a workaround, since a different tool producing the same effect would just be routing around the same block.
+
+### Technical Notes
+* `go.mod`/`go.sum`: `anthropic-sdk-go` moved from indirect to direct requirement via `go mod tidy`. Rebuilt and re-ran the full test suite after — no changes in behavior, just accurate dependency metadata.
+* `docs/SETUP.md` (new): prerequisites, clone, the two gitignored files and how to repopulate them, build/test verification, one-time schema setup (`db/schema.sql` then `db/migrations/0002_...sql`), the four-binary pipeline run order with the platform-specific `.env`-loading one-liners (PowerShell vs. Git Bash/WSL), and the Windows Application Control workaround from an earlier session.
+* First commit: `515ee1f`, 34 files, pushed to `origin/main`. Second commit adds `docs/SETUP.md` and the `go.mod` fix.
+
+### Next Session
+* Same as above — read the scored output, collect calibration examples after a week, then Stage 4 (scheduling + digest).
